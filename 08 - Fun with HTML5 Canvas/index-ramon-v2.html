@@ -6,17 +6,35 @@
 </head>
 <body>
 <canvas id="draw" width="800" height="800"></canvas>
-<button id="button">Gum</button>
+<div id="gum"></div>
+<div id="red" class="select-item selected"></div>
+<div id="blue"></div>
+<div id="green"></div>
+<div id="yellow"></div>
+<div id="orange"></div>
+<div id="purple"></div>
+<div id="rainbow"></div>
+<div class="line-width">
+  <span class="block">lijndikte</span>
+  <span>1</span>
+  <input type="range" value="20" min="1" max="100" id="lineWidth">
+  <span>100</span>
+</div>
+<button id="save">Sla op als afbeelding</button>
+
 <script>
   const canvas = document.querySelector('#draw');
+  const image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
   const ctx = canvas.getContext('2d');
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-  ctx.strokeStyle = '#BADA55';
+  ctx.strokeStyle = 'red';
   ctx.lineJoin = 'round';
   ctx.lineCap = 'round';
-  ctx.lineWidth = 100;
-  ctx.globalCompositeOperation = 'xor';
+  ctx.lineWidth = ctx.lineWidth = document.getElementById('lineWidth').value;
+  //ctx.globalCompositeOperation = 'xor';
+
+  var rainbowColor = document.querySelector('#rainbow');
 
   let isDrawing = false;
   let lastX = 0;
@@ -24,11 +42,82 @@
   let hue = 0;
   let direction = true;
 
-
   function draw(e) {
+
+    ctx.lineWidth = document.getElementById('lineWidth').value;
+
+    document.getElementById('gum').onclick = function() {
+      ctx.strokeStyle = 'white';
+      var removeSelected = document.getElementsByClassName("selected");
+      while (removeSelected.length)
+        removeSelected[0].classList.remove("selected");
+      this.classList.add('selected');
+    };
+
+    document.getElementById('red').onclick = function() {
+      ctx.strokeStyle = 'red';
+      var removeSelected = document.getElementsByClassName("selected");
+      while (removeSelected.length)
+        removeSelected[0].classList.remove("selected");
+      this.classList.add('selected');
+    };
+
+    document.getElementById('blue').onclick = function() {
+      ctx.strokeStyle = 'darkblue';
+      var removeSelected = document.getElementsByClassName("selected");
+      while (removeSelected.length)
+        removeSelected[0].classList.remove("selected");
+      this.classList.add('selected');
+    };
+
+    document.getElementById('green').onclick = function() {
+      ctx.strokeStyle = 'lawngreen';
+      var removeSelected = document.getElementsByClassName("selected");
+      while (removeSelected.length)
+        removeSelected[0].classList.remove("selected");
+      this.classList.add('selected');
+    };
+
+    document.getElementById('yellow').onclick = function() {
+      ctx.strokeStyle = 'yellow';
+      var removeSelected = document.getElementsByClassName("selected");
+      while (removeSelected.length)
+        removeSelected[0].classList.remove("selected");
+      this.classList.add('selected');
+    };
+
+    document.getElementById('orange').onclick = function() {
+      ctx.strokeStyle = 'orange';
+      var removeSelected = document.getElementsByClassName("selected");
+      while (removeSelected.length)
+        removeSelected[0].classList.remove("selected");
+      this.classList.add('selected');
+    };
+
+    document.getElementById('purple').onclick = function() {
+      ctx.strokeStyle = 'purple';
+      var removeSelected = document.getElementsByClassName("selected");
+      while (removeSelected.length)
+        removeSelected[0].classList.remove("selected");
+      this.classList.add('selected');
+    };
+
+    document.getElementById('rainbow').onclick = function() {
+      var removeSelected = document.getElementsByClassName("selected");
+      while (removeSelected.length)
+        removeSelected[0].classList.remove("selected");
+      this.classList.add('selected');
+      ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+    };
+
+
     if(!isDrawing) return; // Stop the function from running when they are not moused down
     console.log(e);
-    ctx.strokeStyle = 'red';
+
+    if (rainbowColor.classList.contains('selected')) {
+      ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+    }
+
     ctx.beginPath();
     // start from
     ctx.moveTo(lastX, lastY);
@@ -37,25 +126,19 @@
     ctx.stroke();
     [lastX, lastY] = [e.offsetX, e.offsetY];
 
-    document.getElementById('button').onclick = function()
-    {
-      alert("button was clicked");
-      ctx.strokeStyle = 'white';
-    }
-
     hue++;
     if(hue >= 360) {
       hue = 0;
     }
 
-    if(ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {
-      direction = !direction;
-    }
-    if(direction) {
-      ctx.lineWidth++;
-    } else {
-      ctx.lineWidth--;
-    }
+//    if(ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {
+//      direction = !direction;
+//    }
+//    if(direction) {
+//      ctx.lineWidth++;
+//    } else {
+//      ctx.lineWidth--;
+//    }
   }
 
   canvas.addEventListener('mousedown', (e) => {
@@ -67,6 +150,18 @@
   canvas.addEventListener('mouseup', () => isDrawing = false);
   canvas.addEventListener('mouseout', () => isDrawing = false);
 
+  document.getElementById('save').onclick = function() {
+    link.href = canvas.toDataURL();
+    link.download = "mypainting.png";
+  };
+  var link = document.createElement('a');
+  link.innerHTML = 'download image';
+  link.addEventListener('click', function(ev) {
+    link.href = canvas.toDataURL();
+    link.download = "mypainting.png";
+  }, false);
+  document.body.appendChild(link);
+
 </script>
 
 <style>
@@ -74,11 +169,135 @@
     margin:0;
   }
 
-  button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
+  #gum.selected, #red.selected, #blue.selected, #green.selected, #yellow.selected, #orange.selected, #purple.selected, #rainbow.selected {
+    border: 2px solid black;
   }
+
+  #gum {
+    position: absolute;
+    display: block;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-image: url("http://www.gifmania.nl/Gif-Animaties-Objecten/Beelden-Animaties-Kantoorbenodigdheden/Gifplaatjes-Kantoorbenodigdhedens/Gummen/Gummen-86342.gif");
+    background-size: cover;
+    background-repeat: no-repeat;
+    cursor: pointer;
+  }
+
+  #red {
+    position: absolute;
+    top: 90px;
+    right: 20px;
+    display: block;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: red;
+    cursor: pointer;
+  }
+
+  #blue {
+    position: absolute;
+    top: 160px;
+    right: 20px;
+    display: block;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: darkblue;
+    cursor: pointer;
+  }
+
+  #green {
+    position: absolute;
+    top: 230px;
+    right: 20px;
+    display: block;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: lawngreen;
+    cursor: pointer;
+  }
+
+  #yellow {
+    position: absolute;
+    top: 300px;
+    right: 20px;
+    display: block;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: yellow;
+    cursor: pointer;
+  }
+
+  #orange {
+    position: absolute;
+    top: 370px;
+    right: 20px;
+    display: block;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: orange;
+    cursor: pointer;
+  }
+
+  #purple {
+    position: absolute;
+    top: 440px;
+    right: 20px;
+    display: block;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: purple;
+    cursor: pointer;
+  }
+
+  #rainbow {
+    position: absolute;
+    top: 510px;
+    right: 20px;
+    display: block;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-image: url("http://coolwallpaperz.info/user-content/uploads/wall/o/52/cars-cartoon-hd-babies-nature-d-315208.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    cursor: pointer;
+  }
+
+  a {
+    position: absolute;
+    top: 580px;
+    right: 20px;
+    padding: 20px;
+    border: 2px solid darkgray;
+    font-family: arial;
+  }
+
+  a:hover {
+    border: 2px solid darkblue;
+    color: darkblue;
+  }
+
+  .line-width {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .block {
+    display: block;
+  }
+
 </style>
 
 </body>

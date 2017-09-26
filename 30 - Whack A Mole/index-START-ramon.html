@@ -8,27 +8,27 @@
 </head>
 <body>
 
-  <h1>Whack-a-mole! <span class="score">0</span></h1>
+  <h1>Whack-a-Comaxx-mole! <span class="score">0</span></h1>
   <button onClick="startGame()">Start!</button>
 
   <div class="game">
     <div class="hole hole1">
-      <div class="mole"></div>
+      <div class="mole" id="mole1"></div>
     </div>
     <div class="hole hole2">
-      <div class="mole"></div>
+      <div class="mole" id="mole2"></div>
     </div>
     <div class="hole hole3">
-      <div class="mole"></div>
+      <div class="mole" id="mole3"></div>
     </div>
     <div class="hole hole4">
-      <div class="mole"></div>
+      <div class="mole" id="mole4"></div>
     </div>
     <div class="hole hole5">
-      <div class="mole"></div>
+      <div class="mole" id="mole5"></div>
     </div>
     <div class="hole hole6">
-      <div class="mole"></div>
+      <div class="mole" id="mole6"></div>
     </div>
   </div>
 
@@ -36,6 +36,8 @@
   const holes = document.querySelectorAll('.hole');
   const scoreBoard = document.querySelector('.score');
   const moles = document.querySelectorAll('.mole');
+  const moleNumbers = ["0", "1", "2", "3", "4", "5"];
+  var moleLength = moleNumbers.length;
   var myMoles = ["moles/don.png", "moles/jasper.png", "moles/joep.png", "moles/marijn.png", "moles/markp.png", "moles/markv.png", "moles/melvin.png", "moles/omri.png", "moles/ramon.png", "moles/rico.png", "moles/ruud.png", "moles/tom.png", "moles/wessel.png"];
   let lastHole;
   let timeUp = false;
@@ -44,6 +46,56 @@
   function randomTime(min, max) {
     return Math.round(Math.random() * (max -min) + min);
   }
+
+  function shuffle(array) {
+    var m = array.length, t, i;
+    while (m > 0)
+    {
+      i = Math.floor(Math.random() * m--);
+      t = array[m];
+      array[m] = array[i];
+      array[i] = t;
+    }
+    return array;
+  }
+
+  function setMoles() {
+    for (var i = 0; i < moleLength; i++) {
+      moles[i].style.background = 'url(' + myMoles[i] + ') top center no-repeat';
+      //Do something
+    }
+
+
+//    moles.forEach(function (mole) {
+//      const i = Math.floor(Math.random() * moles.length);
+//      const a = Math.floor(Math.random() * myMoles.length);
+//      const moleNumber = moles[i];
+//      moleNumber.style.background = 'url(' + myMoles[a] + ') top center no-repeat';
+//    })
+  }
+
+//  function setMoles() {
+//    const a = Math.floor(Math.random() * myMoles.length);
+//    const b = Math.floor(Math.random() * myMoles.length);
+//    const c = Math.floor(Math.random() * myMoles.length);
+//    const d = Math.floor(Math.random() * myMoles.length);
+//    const e = Math.floor(Math.random() * myMoles.length);
+//    const f = Math.floor(Math.random() * myMoles.length);
+//    const moleOne = document.getElementById('mole1');
+//    const moleTwo = document.getElementById('mole2');
+//    const moleThree = document.getElementById('mole3');
+//    const moleFour = document.getElementById('mole4');
+//    const moleFive = document.getElementById('mole5');
+//    const moleSix = document.getElementById('mole6');
+//    moleOne.style.background = 'url(' + myMoles[a] + ') top center no-repeat';
+//    moleTwo.style.background = 'url(' + myMoles[b] + ') top center no-repeat';
+//    moleThree.style.background = 'url(' + myMoles[c] + ') top center no-repeat';
+//    moleFour.style.background = 'url(' + myMoles[d] + ') top center no-repeat';
+//    moleFive.style.background = 'url(' + myMoles[e] + ') top center no-repeat';
+//    moleSix.style.background = 'url(' + myMoles[f] + ') top center no-repeat';
+//
+//    console.log(moleOne);
+//  }
 
   function randomHole(holes) {
     const idx = Math.floor(Math.random() * holes.length);
@@ -61,10 +113,12 @@
   function peep() {
     const time = randomTime(200, 500);
     const hole = randomHole(holes);
+
     hole.classList.add('up');
 
     setTimeout(() => {
       hole.classList.remove('up');
+    moles.forEach(mole => mole.classList.remove('dizzy'));
     if (!timeUp) peep();
     }, time);
   }
@@ -73,13 +127,17 @@
     scoreBoard.textContent = 0;
     timeUp = false;
     score = 0;
+    setMoles();
     peep();
+    shuffle(moleNumbers); // shuffles the array
+    shuffle(myMoles); // shuffles the array
     setTimeout(() => timeUp = true, 15000)
   }
 
   function bonk(e) {
     if(!e.isTrusted) return;
     score++;
+    this.classList.add('dizzy');
     this.classList.remove('up');
     scoreBoard.textContent = score;
   }
